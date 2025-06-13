@@ -3,36 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <title>Rubik's cube simulator</title>
-    <style>
-        canvas {
-            position: absolute;
-            top: 10%;
-            right: 5%;
-        }
-        button.rotation {
-            width: 40px;
-        }
-        button {
-            margin: 5px;
-            height: 40px;
-            text-align: center;
-            font-size: 18px;
-            cursor: pointer;
-            background-color: #f0f0f0;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            font-weight: bold;
-        }
-        textarea {
-            margin: 5px;
-            font-size: 18px;
-            cursor: pointer;
-            background-color: #f0f0f0;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            font-weight: bold;
-        }
-    </style>
+    <link rel=stylesheet href="./style.css">
 </head>
 <body bgcolor="#ebfbff">
     <h1>Rubik's Cube Simulator</h1>
@@ -72,11 +43,20 @@
 
     <br><br>
 
-    <textarea id="rotationInput" placeholder="Enter rotations sequence">L U B' U' R L' B R' F B' D R D' F'</textarea>
+    <textarea id=rotationInput placeholder="Enter rotations sequence">L U B' U' R L' B R' F B' D R D' F'</textarea>
     <br>
     <button onclick="executeRotations()">Execute</button>
 
-    <canvas id="cubeCanvas" width="500" height="500"></canvas>
+    <canvas id=cubeCanvas width=500 height=500></canvas>
+
+    <div id=minicube>
+        <div class=cube_side>F</div>
+        <div class=cube_side>B</div>
+        <div class=cube_side>L</div>
+        <div class=cube_side>R</div>
+        <div class=cube_side>D</div>
+        <div class=cube_side>U</div>
+    </div>
 
     <script src="https://webgl2fundamentals.org/webgl/resources/webgl-utils.js"></script>
     <script src="./webgl2_lib.js"></script>

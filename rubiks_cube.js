@@ -155,6 +155,9 @@ class RubiksCube {
     }
 
     rotate(face){
+        if(!CubePiece.faces.includes(face[0])){
+            alert('uncoded move!');
+        }
         const template = RubiksCube.template[face[0]];
         const sign = face[1] ?? '';
 
@@ -272,5 +275,6 @@ class RubiksCubeDrawer {
         this.rotation[0] = this.rotation[0] % 360; // Keep within 0-360 degrees
         this.rotation[1] = this.rotation[1] % 360; // Keep within 0-360 degrees
         this.draw();
+        minicube.style.transform = `rotateX(${180-this.rotation[0]}deg) rotateY(${this.rotation[1]}deg)`;
     }
 }
