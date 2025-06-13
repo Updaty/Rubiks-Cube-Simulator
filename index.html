@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>Rubik's cube simulator</title>
+    <style>
+        canvas {
+            position: absolute;
+            top: 10%;
+            right: 5%;
+        }
+        button.rotation {
+            width: 40px;
+        }
+        button {
+            margin: 5px;
+            height: 40px;
+            text-align: center;
+            font-size: 18px;
+            cursor: pointer;
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        textarea {
+            margin: 5px;
+            font-size: 18px;
+            cursor: pointer;
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body bgcolor="#ebfbff">
+    <h1>Rubik's Cube Simulator</h1>
+    <p>This is a simple Rubik's cube simulator.</p>
+    <p>Use the buttons below to manipulate the cube.</p>
+    <p> write it in the text input using the format shown in the example.</p>
+    
+    <button class=rotation onclick="cube.rotate('U');drawCube()">U</button>
+    <button class=rotation onclick="cube.rotate('D');drawCube()">D</button>
+    <button class=rotation onclick="cube.rotate('L');drawCube()">L</button>
+    <button class=rotation onclick="cube.rotate('R');drawCube()">R</button>
+    <button class=rotation onclick="cube.rotate('F');drawCube()">F</button>
+    <button class=rotation onclick="cube.rotate('B');drawCube()">B</button>
+    
+    <br>
+
+    <button class=rotation onclick="cube.rotate(`U'`);drawCube()">U'</button>
+    <button class=rotation onclick="cube.rotate(`D'`);drawCube()">D'</button>
+    <button class=rotation onclick="cube.rotate(`L'`);drawCube()">L'</button>
+    <button class=rotation onclick="cube.rotate(`R'`);drawCube()">R'</button>
+    <button class=rotation onclick="cube.rotate(`F'`);drawCube()">F'</button>
+    <button class=rotation onclick="cube.rotate(`B'`);drawCube()">B'</button>
+
+    <br>
+
+    <button class=rotation onclick="cube.rotate(`U2`);drawCube()">U2</button>
+    <button class=rotation onclick="cube.rotate(`D2`);drawCube()">D2</button>
+    <button class=rotation onclick="cube.rotate(`L2`);drawCube()">L2</button>
+    <button class=rotation onclick="cube.rotate(`R2`);drawCube()">R2</button>
+    <button class=rotation onclick="cube.rotate(`F2`);drawCube()">F2</button>
+    <button class=rotation onclick="cube.rotate(`B2`);drawCube()">B2</button>
+
+    <br><br>
+
+    <button onclick="cube.shuffle();drawCube()">Shuffle</button>
+    <button onclick="cube.initPieces();drawCube()">Reset</button>
+
+    <br><br>
+
+    <textarea id="rotationInput" placeholder="Enter rotations sequence">L U B' U' R L' B R' F B' D R D' F'</textarea>
+    <br>
+    <button onclick="executeRotations()">Execute</button>
+
+    <canvas id="cubeCanvas" width="500" height="500"></canvas>
+
+    <script src="https://webgl2fundamentals.org/webgl/resources/webgl-utils.js"></script>
+    <script src="./webgl2_lib.js"></script>
+    <script src="./rubiks_cube.js"></script>
+    <script>
+        const cube = new RubiksCube();
+        //cube.shuffle();
+        const cubeDrawer = new RubiksCubeDrawer(cube, 'cubeCanvas');
+        cubeDrawer.rotation = [10, 12]; // Initial rotation angles
+
+        function drawCube() {
+            setTriangleColors(cubeDrawer.gl, cube);
+            cubeDrawer.draw();
+        }
+        // Initial draw
+        drawCube();
+
+        function executeRotations() {
+            const input = document.getElementById('rotationInput').value;
+            if (!(/^[UDLRFB][\'2]?(\s[UDLRFB][\'2]?)*$/.test(input))) {
+                return alert();
+            }
+                
+            const rotations = input.trim().split(' ');
+            rotations.forEach(rotation => {
+                cube.rotate(rotation);
+            });
+            drawCube();
+        }
+
+        let isMouseDown = false;
+
+        cubeCanvas.addEventListener('mousedown', (event) => {
+            isMouseDown = true;
+        });
+        cubeCanvas.addEventListener('mousemove', (event) => {
+            if (isMouseDown) {
+                cubeDrawer.rotate(event.movementY, -event.movementX);
+            }
+        });
+        cubeCanvas.addEventListener('mouseup', () => {
+            isMouseDown = false;
+        });
+        cubeCanvas.addEventListener('mouseleave', () => {
+            isMouseDown = false;
+        });
+    </script>
+</body>
+</html>
