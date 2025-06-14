@@ -62,47 +62,62 @@
     <script src="./webgl2_lib.js"></script>
     <script src="./rubiks_cube.js"></script>
     <script>
-        const cube = new RubiksCube();
-        //cube.shuffle();
-        const cubeDrawer = new RubiksCubeDrawer(cube, 'cubeCanvas');
-        cubeDrawer.rotation = [10, 12]; // Initial rotation angles
+const cube = new RubiksCube();
+//cube.shuffle();
+const cubeDrawer = new RubiksCubeDrawer(cube, 'cubeCanvas');
+cubeDrawer.rotation = [10, 12]; // Initial rotation angles
 
-        function drawCube() {
-            setColors(cubeDrawer.gl, cube);
-            cubeDrawer.draw();
-        }
-        // Initial draw
-        drawCube();
+function drawCube() {
+    setColors(cubeDrawer.gl, cube);
+    cubeDrawer.draw();
+}
+// Initial draw
+drawCube();
 
-        function executeRotations() {
-            const input = document.getElementById('rotationInput').value;
-            if (!(/^[UDLRFB][\'2]?(\s[UDLRFB][\'2]?)*$/.test(input))) {
-                return alert();
-            }
-                
-            const rotations = input.trim().split(' ');
-            rotations.forEach(rotation => {
-                cube.rotate(rotation);
-            });
-            drawCube();
-        }
+function executeRotations() {
+    const input = document.getElementById('rotationInput').value;
+    if (!(/^[UDLRFB][\'2]?(\s[UDLRFB][\'2]?)*$/.test(input))) {
+        return alert();
+    }
+        
+    const rotations = input.trim().split(' ');
+    rotations.forEach(rotation => {
+        cube.rotate(rotation);
+    });
+    drawCube();
+}
 
-        let isMouseDown = false;
+let isMouseDown = false;
 
-        cubeCanvas.addEventListener('mousedown', (event) => {
-            isMouseDown = true;
-        });
-        cubeCanvas.addEventListener('mousemove', (event) => {
-            if (isMouseDown) {
-                cubeDrawer.rotate(event.movementY, -event.movementX);
-            }
-        });
-        cubeCanvas.addEventListener('mouseup', () => {
-            isMouseDown = false;
-        });
-        cubeCanvas.addEventListener('mouseleave', () => {
-            isMouseDown = false;
-        });
+cubeCanvas.addEventListener('mousedown', (event) => {
+    isMouseDown = true;
+});
+cubeCanvas.addEventListener('mousemove', (event) => {
+    if (isMouseDown) {
+        cubeDrawer.rotate(event.movementY, -event.movementX);
+    }
+});
+cubeCanvas.addEventListener('mouseup', () => {
+    isMouseDown = false;
+});
+cubeCanvas.addEventListener('mouseleave', () => {
+    isMouseDown = false;
+});
+
+const touchStart = [0,0];
+
+
+cubeCanvas.addEventListener('touchstart', (event) => {
+    const e = event.changedTouches[0];
+    touchStart[0] = e.clientX;
+    touchStart[1] = e.clientY;
+});
+cubeCanvas.addEventListener('touchmove', (event) => {
+    const e = event.changedTouches[0];
+    cubeDrawer.rotate((e.clientY-touchStart[1])/5, (touchStart[0]-e.clientX)/5);
+    touchStart[0] = e.clientX;
+    touchStart[1] = e.clientY;
+});
     </script>
 </body>
 </html>
