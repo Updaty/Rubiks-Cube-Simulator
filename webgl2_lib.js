@@ -44,7 +44,7 @@ function initIn(obj, canvasId) {
     obj.gl.bindBuffer(obj.gl.ARRAY_BUFFER, obj.colorBuffer);
 
     // Set colors for each piece
-    setTriangleColors(obj.gl, obj.cube);
+    setColors(obj.gl, obj.cube);
 
     // Turn on the attribute
     obj.gl.enableVertexAttribArray(obj.colorAttribLoc);
@@ -256,7 +256,7 @@ function drawRubikFace(face, cube, colors) {
     }
 }
 
-function setTriangleColors(gl, cube) {
+function setColors(gl, cube) {
     const colors = [];
     
     // colors.push(...colorMap[piece.faces[0]]); // Up
@@ -267,6 +267,9 @@ function setTriangleColors(gl, cube) {
     }
 
     //lineColors
+	for(let i = 0; i < 8*6*6; ++i){
+		colors.push(0, 0, 0);
+	}
 
     gl.bufferData(
         gl.ARRAY_BUFFER,

@@ -249,24 +249,21 @@ class RubiksCubeDrawer {
 
         this.gl.bindVertexArray(this.vao);
 
-        {
-            setGeometry(this.gl, this.cube);
-            setTriangleColors(this.gl, this.cube);
+        
 
-            // Set the rubik projection matrix
-            let matrix = m4.projection(this.gl.canvas.clientWidth, this.gl.canvas.clientHeight, 400);
-            matrix = m4.translate(matrix, 200, 200, 0);
-            matrix = m4.xRotate(matrix, this.rotation[0]);
-            matrix = m4.yRotate(matrix, this.rotation[1]);
-            matrix = m4.scale(matrix, 2.5, 2.5, 2.5);
-            matrix = m4.translate(matrix, -45, -45, -45);
+		// Set the rubik projection matrix
+		let matrix = m4.perspective(70,this.gl.canvas.clientWidth / this.gl.canvas.clientHeight, 1, 2000)//projection(this.gl.canvas.clientWidth, this.gl.canvas.clientHeight, 400);
+		matrix = m4.translate(matrix, 0, 0, -400);
+		matrix = m4.xRotate(matrix, this.rotation[0]);
+		matrix = m4.yRotate(matrix, 180-this.rotation[1]);
+		matrix = m4.scale(matrix, 2.5, 2.5, 2.5);
+		matrix = m4.translate(matrix, -45, -45, -45);
 
-            //Set the matrix uniform
-            this.gl.uniformMatrix4fv(this.matrixLoc, false, matrix);
+		//Set the matrix uniform
+		this.gl.uniformMatrix4fv(this.matrixLoc, false, matrix);
 
-            // Draw the geometry                     nine 
-            this.gl.drawArrays(this.gl.TRIANGLES, 0, (9 + 8) * 6 * 6);
-        }
+		// Draw the geometry                     9 pieces and 4 lines on each side
+		this.gl.drawArrays(this.gl.TRIANGLES, 0, (9 + 4) * 6 * 6);
     }
 
     rotate(angleX, angleY) {

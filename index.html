@@ -46,7 +46,7 @@
     <textarea id=rotationInput placeholder="Enter rotations sequence">L U B' U' R L' B R' F B' D R D' F'</textarea>
     <br>
     <button onclick="executeRotations()">Execute</button>
-
+	
     <canvas id=cubeCanvas width=500 height=500></canvas>
 
     <div id=minicube>
@@ -68,7 +68,7 @@
         cubeDrawer.rotation = [10, 12]; // Initial rotation angles
 
         function drawCube() {
-            setTriangleColors(cubeDrawer.gl, cube);
+            setColors(cubeDrawer.gl, cube);
             cubeDrawer.draw();
         }
         // Initial draw
