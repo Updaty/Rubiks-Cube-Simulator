@@ -34,7 +34,7 @@ textarea {
     position: absolute;
     top: 10%;
     right: 5%;
-    transform: rotateX(170deg) rotateY(12deg);
+    transform: rotateX(170deg) rotateY(12deg) rotateZ(180deg);
     transform-style: preserve-3d;
 
     /* prevent text selection */
@@ -57,19 +57,19 @@ textarea {
 
 
 .cube_side:nth-child(1){
-    transform: translate3d(0, 0, calc(var(--size) * -.5)) rotateX(180deg);
+    transform: translate3d(0, 0, calc(var(--size) * -.5)) rotateX(180deg) rotateZ(180deg);
 }
 
 
 .cube_side:nth-child(2) {
-    transform: translate3d(0, 0, calc(var(--size) * .5)) rotateX(180deg) rotateY(180deg);
+    transform: translate3d(0, 0, calc(var(--size) * .5)) rotateX(180deg) rotateY(180deg) rotateZ(180deg);
 }
 
 
 .cube_side:nth-child(3),
 .cube_side:nth-child(4) {
     --rotation: 90deg;
-    transform: rotateY(var(--rotation)) translate3d(0, 0, calc(var(--size) * -0.5)) rotateX(180deg) ;
+    transform: rotateY(var(--rotation)) translate3d(0, 0, calc(var(--size) * -0.5)) rotateX(180deg) rotateZ(180deg);
 }
 
 .cube_side:nth-child(4) {
@@ -79,7 +79,7 @@ textarea {
 .cube_side:nth-child(5),
 .cube_side:nth-child(6) {
     --rotation: -90deg;
-    transform: rotateX(var(--rotation)) translate3d(0, 0, calc(var(--size) * -0.5)) rotateX(180deg) ;
+    transform: rotateX(var(--rotation)) translate3d(0, 0, calc(var(--size) * -0.5)) rotateX(180deg) rotateZ(180deg);
 }
 
 .cube_side:nth-child(6) {

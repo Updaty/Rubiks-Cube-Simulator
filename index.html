@@ -52,10 +52,10 @@
     <div id=minicube>
         <div class=cube_side>F</div>
         <div class=cube_side>B</div>
-        <div class=cube_side>L</div>
         <div class=cube_side>R</div>
-        <div class=cube_side>D</div>
+        <div class=cube_side>L</div>
         <div class=cube_side>U</div>
+        <div class=cube_side>D</div>
     </div>
 
     <script src="https://webgl2fundamentals.org/webgl/resources/webgl-utils.js"></script>
@@ -65,7 +65,7 @@
 const cube = new RubiksCube();
 //cube.shuffle();
 const cubeDrawer = new RubiksCubeDrawer(cube, 'cubeCanvas');
-cubeDrawer.rotation = [10, 12]; // Initial rotation angles
+cubeDrawer.rotation = [200, 160]; // Initial rotation angles
 
 function drawCube() {
     setColors(cubeDrawer.gl, cube);
@@ -94,7 +94,7 @@ cubeCanvas.addEventListener('mousedown', (event) => {
 });
 cubeCanvas.addEventListener('mousemove', (event) => {
     if (isMouseDown) {
-        cubeDrawer.rotate(event.movementY, -event.movementX);
+        cubeDrawer.rotate(event.movementY, event.movementX);
     }
 });
 cubeCanvas.addEventListener('mouseup', () => {
