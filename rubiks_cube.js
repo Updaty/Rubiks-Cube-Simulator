@@ -252,8 +252,8 @@ class RubiksCubeDrawer {
         
 
 		// Set the rubik projection matrix
-		let matrix = m4.perspective(70,this.gl.canvas.clientWidth / this.gl.canvas.clientHeight, 1, 2000)//projection(this.gl.canvas.clientWidth, this.gl.canvas.clientHeight, 400);
-		matrix = m4.translate(matrix, 0, 0, -400);
+		let matrix = m4.perspective(50,this.gl.canvas.clientWidth / this.gl.canvas.clientHeight, 1, 2000)//projection(this.gl.canvas.clientWidth, this.gl.canvas.clientHeight, 400);
+		matrix = m4.translate(matrix, 0, 0, -500);
 		matrix = m4.xRotate(matrix, this.rotation[0]);
 		matrix = m4.yRotate(matrix, 180-this.rotation[1]);
 		matrix = m4.scale(matrix, 2.5, 2.5, 2.5);
