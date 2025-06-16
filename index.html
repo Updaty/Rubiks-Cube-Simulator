@@ -108,12 +108,14 @@ const touchStart = [0,0];
 
 
 cubeCanvas.addEventListener('touchstart', (event) => {
-    const e = event.changedTouches[0];
+event.preventDefault();
+	const e = event.changedTouches[0];
     touchStart[0] = e.clientX;
     touchStart[1] = e.clientY;
 });
 cubeCanvas.addEventListener('touchmove', (event) => {
-    const e = event.changedTouches[0];
+event.preventDefault();
+	const e = event.changedTouches[0];
     cubeDrawer.rotate((e.clientY-touchStart[1])/5, (e.clientX-touchStart[0])/5);
     touchStart[0] = e.clientX;
     touchStart[1] = e.clientY;
