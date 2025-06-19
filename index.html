@@ -11,30 +11,66 @@
     <p>Use the buttons below to manipulate the cube.</p>
     <p> write it in the text input using the format shown in the example.</p>
     
-    <button class=rotation onclick="cube.rotate('U');drawCube()">U</button>
-    <button class=rotation onclick="cube.rotate('D');drawCube()">D</button>
-    <button class=rotation onclick="cube.rotate('L');drawCube()">L</button>
-    <button class=rotation onclick="cube.rotate('R');drawCube()">R</button>
-    <button class=rotation onclick="cube.rotate('F');drawCube()">F</button>
-    <button class=rotation onclick="cube.rotate('B');drawCube()">B</button>
+
+    <ul>
+    <li><button class="rotationType active" for=classicRotations>Classic<div></div></button></li>
+    <li><button class="rotationType" for=otherRotations>Other<div></div></button></li>
+    </ul>
+
+    
+    <div id=classicRotations class=rotationButtons>
+    <button class=rotation>U</button>
+    <button class=rotation>D</button>
+    <button class=rotation>L</button>
+    <button class=rotation>R</button>
+    <button class=rotation>F</button>
+    <button class=rotation>B</button>
     
     <br>
 
-    <button class=rotation onclick="cube.rotate(`U'`);drawCube()">U'</button>
-    <button class=rotation onclick="cube.rotate(`D'`);drawCube()">D'</button>
-    <button class=rotation onclick="cube.rotate(`L'`);drawCube()">L'</button>
-    <button class=rotation onclick="cube.rotate(`R'`);drawCube()">R'</button>
-    <button class=rotation onclick="cube.rotate(`F'`);drawCube()">F'</button>
-    <button class=rotation onclick="cube.rotate(`B'`);drawCube()">B'</button>
+    <button class=rotation>U'</button>
+    <button class=rotation>D'</button>
+    <button class=rotation>L'</button>
+    <button class=rotation>R'</button>
+    <button class=rotation>F'</button>
+    <button class=rotation>B'</button>
 
     <br>
 
-    <button class=rotation onclick="cube.rotate(`U2`);drawCube()">U2</button>
-    <button class=rotation onclick="cube.rotate(`D2`);drawCube()">D2</button>
-    <button class=rotation onclick="cube.rotate(`L2`);drawCube()">L2</button>
-    <button class=rotation onclick="cube.rotate(`R2`);drawCube()">R2</button>
-    <button class=rotation onclick="cube.rotate(`F2`);drawCube()">F2</button>
-    <button class=rotation onclick="cube.rotate(`B2`);drawCube()">B2</button>
+    <button class=rotation>U2</button>
+    <button class=rotation>D2</button>
+    <button class=rotation>L2</button>
+    <button class=rotation>R2</button>
+    <button class=rotation>F2</button>
+    <button class=rotation>B2</button>
+    </div>
+
+    <div id=otherRotations class=rotationButtons style="display: none;">
+    <button class=rotation>M</button>
+    <button class=rotation>E</button>
+    <button class=rotation>S</button>
+    <button class=rotation>x</button>
+    <button class=rotation>y</button>
+    <button class=rotation>z</button>
+
+    <br>
+
+    <button class=rotation>M'</button>
+    <button class=rotation>E'</button>
+    <button class=rotation>S'</button>
+    <button class=rotation>x'</button>
+    <button class=rotation>y'</button>
+    <button class=rotation>z'</button>
+
+    <br>
+
+    <button class=rotation>M2</button>
+    <button class=rotation>E2</button>
+    <button class=rotation>S2</button>
+    <button class=rotation>x2</button>
+    <button class=rotation>y2</button>
+    <button class=rotation>z2</button>
+</div>
 
     <br><br>
 
@@ -76,8 +112,8 @@ drawCube();
 
 function executeRotations() {
     const input = document.getElementById('rotationInput').value;
-    if (!(/^[UDLRFB][\'2]?(\s[UDLRFB][\'2]?)*$/.test(input))) {
-        return alert();
+    if (!(/^[UDLRFBMES][\'2]?(\s[UDLRFBMES][\'2]?)*$/.test(input))) {
+        return alert('Invalid input format. Please use the format: "L U B\' U\'"');
     }
         
     const rotations = input.trim().split(' ');
@@ -119,6 +155,32 @@ event.preventDefault();
     cubeDrawer.rotate((e.clientY-touchStart[1])/5, (e.clientX-touchStart[0])/5);
     touchStart[0] = e.clientX;
     touchStart[1] = e.clientY;
+});
+
+function handleRotationTypeButton(e) {
+    const rotationButtons = document.querySelectorAll('.rotationButtons');
+    rotationButtons.forEach(button => {
+        button.style.display = 'none';
+    });
+    const rotationTypeButtons = document.querySelectorAll('.rotationType');
+    rotationTypeButtons.forEach(button => {
+        button.classList.remove('active');
+    });
+    e.target.classList.add('active');
+    document.getElementById(e.target.attributes.for.value).style.display = 'block';
+
+}
+
+document.querySelectorAll('.rotationType').forEach(button => {
+    button.addEventListener('click', handleRotationTypeButton);
+});
+
+document.querySelectorAll('.rotation').forEach(button => {
+    button.addEventListener('click', e => {
+        const rotation = e.target.textContent.trim();
+        cube.rotate(rotation);
+        drawCube();
+    });
 });
     </script>
 </body>

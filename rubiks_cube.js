@@ -46,6 +46,7 @@ class CubePiece {
         switch (rotation) {
             case 'R':
             case "L'":
+            case "M'":
                 this.faces.U = oldFaces.F; // up becomes back
                 this.faces.D = oldFaces.B; // down becomes front
                 // left remains left
@@ -56,6 +57,7 @@ class CubePiece {
             
             case 'L':
             case "R'":
+            case 'M':
                 this.faces.U = oldFaces.B; // up becomes back
                 this.faces.D = oldFaces.F; // down becomes front
                 // left remains left
@@ -66,6 +68,7 @@ class CubePiece {
             
             case 'U':
             case "D'":
+            case "E'":
                 // up remains up
                 // down remains down
                 this.faces.L = oldFaces.F; // left becomes back
@@ -76,6 +79,7 @@ class CubePiece {
             
             case 'D':
             case "U'":
+            case 'E':
                 // up remains up
                 // down remains down
                 this.faces.L = oldFaces.B; // left becomes front
@@ -86,6 +90,7 @@ class CubePiece {
             
             case 'F':
             case "B'":
+            case 'S':
                 this.faces.U = oldFaces.L; // up becomes right
                 this.faces.D = oldFaces.R; // down becomes left
                 this.faces.L = oldFaces.D; // left becomes up
@@ -95,6 +100,7 @@ class CubePiece {
                 break;
             case 'B':
             case "F'":
+            case "S'":
                 this.faces.U = oldFaces.R; // up becomes left
                 this.faces.D = oldFaces.L; // down becomes right
                 this.faces.L = oldFaces.U; // left becomes down
@@ -104,6 +110,7 @@ class CubePiece {
                 break;
             case 'U2':
             case 'D2':
+            case 'E2':
                 // up remains up
                 // down remains down
                 this.faces.L = oldFaces.R; // left becomes right
@@ -113,6 +120,7 @@ class CubePiece {
                 break;
             case 'R2':
             case 'L2':
+            case 'M2':
                 this.faces.U = oldFaces.D; // up becomes down
                 this.faces.D = oldFaces.U; // down becomes up
                 // left remains left
@@ -122,6 +130,7 @@ class CubePiece {
                 break;
             case 'F2':
             case 'B2':
+            case 'S2':
                 this.faces.U = oldFaces.D; // up becomes down
                 this.faces.D = oldFaces.U; // down becomes up
                 this.faces.L = oldFaces.R; // left becomes right
@@ -154,37 +163,54 @@ class RubiksCube {
         }
     }
 
+    static toggleSign = {
+        "'": "",
+        "2": "2",
+        "": "'"
+    }
+
     rotate(face){
-        if(!CubePiece.faces.includes(face[0])){
-            alert('uncoded move!');
-        }
-        const template = RubiksCube.template[face[0]];
         const sign = face[1] ?? '';
-
-        for (let i = 0; i < 3; ++i) {
-            for (let j = 0; j < 3; ++j) {
-                this.pieces[template(i, j)].rotate(face);
-
-            }
-        }
         
+        
+        if('xyz'.includes(face[0])){
+            if(face[0] === 'x') {
+                this.rotate('R' + RubiksCube.toggleSign[sign]);
+                this.rotate('L' + sign);
+                this.rotate('M' + sign);
+            }else if(face[0] === 'y') {
+                this.rotate('U' + sign);
+                this.rotate('D' + RubiksCube.toggleSign[sign]);
+                this.rotate('E' + sign);
+            }else if(face[0] === 'z') {
+                this.rotate('F' + sign);
+                this.rotate('B' + RubiksCube.toggleSign[sign]);
+                this.rotate('S' + sign);
+            }
+            return;
+        } 
+        
+        const template = RubiksCube.template[face[0]];
         const facePieces = this.getFacePieces(template);
 
         if(sign === "2") {
             for (let i = 0; i < 3; ++i) {
                 for (let j = 0; j < 3; ++j) {
+                    this.pieces[template(i, j)].rotate(face);
                     this.pieces[template(i, j)] = facePieces[template(2-i, 2-j)];
                 }
             }
-        } else if (sign === "'" != ('URB'.includes(face[0]))) {
+        } else if (sign === "'" != ('URBM'.includes(face[0]))) {
             for (let i = 0; i < 3; ++i) {
                 for (let j = 0; j < 3; ++j) {
+                    this.pieces[template(i, j)].rotate(face);
                     this.pieces[template(i, j)] = facePieces[template(2-j, i)];
                 }
             }
         } else {
             for (let i = 0; i < 3; ++i) {
                 for (let j = 0; j < 3; ++j) {
+                    this.pieces[template(i, j)].rotate(face);
                     this.pieces[template(i, j)] = facePieces[template(j, 2-i)];
                 }
             }
@@ -197,7 +223,10 @@ class RubiksCube {
         L: ((y,z) => `0${y}${z}`),
         R: ((y,z) => `2${y}${z}`),
         F: ((x,y) => `${x}${y}0`),
-        B: ((x,y) => `${x}${y}2`)
+        B: ((x,y) => `${x}${y}2`),
+        M: ((x,y) => `1${y}${x}`),
+        E: ((x,z) => `${x}1${z}`),
+        S: ((x,y) => `${x}${y}1`),
         
     }
     shuffle() {
@@ -215,9 +244,10 @@ class RubiksCube {
         for (let i = 0; i < 3; ++i) {
             for (let j = 0; j < 3; ++j) {
                 const n = template(i, j);
-                facePieces[n] = this.pieces[n]; // Up face
+                facePieces[n] = this.pieces[n]; 
             };
         };
+
         Object.freeze(facePieces);
         return facePieces;
     }

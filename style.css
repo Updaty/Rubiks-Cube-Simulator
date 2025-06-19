@@ -3,9 +3,6 @@ canvas {
     top: 10%;
     right: 5%;
 }
-button.rotation {
-    width: 40px;
-}
 button {
     margin: 5px;
     height: 40px;
@@ -17,6 +14,11 @@ button {
     border-radius: 5px;
     font-weight: bold;
 }
+
+button.rotation {
+    width: 40px;
+}
+
 textarea {
     margin: 5px;
     font-size: 18px;
@@ -84,4 +86,60 @@ textarea {
 
 .cube_side:nth-child(6) {
     --rotation: 90deg;
+}
+
+ul {
+    position: relative;
+    list-style: none;
+    display: flex;
+    margin-bottom: 0;
+}
+
+button.rotationType {
+    position: relative;
+    font-size: 20px;
+    margin: 5px;
+    margin-bottom: 0;
+    width: 84px;
+    border-color: #ddd;
+    border-radius: 5px 5px 0 0;
+    border-bottom-color: transparent;
+    color: #444;
+    transition-duration: 0.5s;
+}
+
+button.rotationType.active {
+    border: 1px solid #ccc;
+    border-bottom-color: transparent;
+    background-color: #f1f9fb;
+    z-index: 500;
+    color: #000;
+}
+
+button.rotationType.active > div {
+    position: absolute;
+    bottom: -1px;
+    width: 84px;
+    height: 3px;
+    left: 0;
+}
+
+button.rotationType.active > div::before {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    width: 82px;
+    height: 3px;
+    left: 0;
+    background-color: #f1f9fb;
+}
+
+
+div.rotationButtons {
+    align-items: center;
+    width: 320px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f1f9fb;
+    transition-duration: 0.5s;
 }
