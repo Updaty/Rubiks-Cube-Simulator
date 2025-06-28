@@ -1,6 +1,6 @@
 'use strict';
 
-function initIn(obj, canvasId) {
+function initIn(obj, canvasId) {  
     obj.gl = document.getElementById(canvasId).getContext('webgl2');
     if (!obj.gl) {
         throw new Error("Canvas context not found.");
@@ -494,10 +494,70 @@ const m4 = {
  
   scale: (m, sx, sy, sz) =>
     m4.multiply(m, m4.scaling(sx, sy, sz)),
+
+  addVectors: (a, b, dst) => {
+    dst = dst ?? new Float32Array(3);
+    dst[0] = a[0] + b[0];
+    dst[1] = a[1] + b[1];
+    dst[2] = a[2] + b[2];
+    return dst;
+  },
+
+  subtractVectors: (a, b, dst) => {
+    dst = dst ?? new Float32Array(3);
+    dst[0] = a[0] - b[0];
+    dst[1] = a[1] - b[1];
+    dst[2] = a[2] - b[2];
+    return dst;
+  },
+
+  scaleVector: (v, s, dst) => {
+    dst = dst ?? new Float32Array(3);
+    dst[0] = v[0] * s;
+    dst[1] = v[1] * s;
+    dst[2] = v[2] * s;
+    return dst;
+  },
+
+  cross: (a, b, dst) => {
+    dst = dst ?? new Float32Array(3);
+    dst[0] = a[1] * b[2] - a[2] * b[1];
+    dst[1] = a[2] * b[0] - a[0] * b[2];
+    dst[2] = a[0] * b[1] - a[1] * b[0];
+    return dst;
+  },
+
+  dot: (a, b) => {
+    return (a[0] * b[0]) + (a[1] * b[1]) + (a[2] * b[2]);
+  },
+
+  normalize: (v, dst) => {
+    dst = dst ?? new Float32Array(3);
+    const length = Math.sqrt(v[0] * v[0] + v[1] * v[1] + v[2] * v[2]);
+    // make sure we don't divide by 0.
+    if (length > 0.00001) {
+      dst[0] = v[0] / length;
+      dst[1] = v[1] / length;
+      dst[2] = v[2] / length;
+    }
+    return dst;
+  },
+
+  transformVector: (m, v, dst) => {
+    dst = dst ?? new Float32Array(4);
+    for (let i = 0; i < 4; ++i) {
+      dst[i] = 0.0;
+      for (let j = 0; j < 4; ++j) {
+        dst[i] += v[j] * m[j * 4 + i];
+      }
+    }
+    return dst;
+  },
+
   lookAt: (cameraPosition, target, up) => {
-    const zAxis = v3.normalize(v3.subtract(cameraPosition, target));
-    const xAxis = v3.normalize(v3.cross(up, zAxis));
-    const yAxis = v3.normalize(v3.cross(zAxis, xAxis));
+    const zAxis = m4.normalize(m4.subtract(cameraPosition, target));
+    const xAxis = m4.normalize(m4.cross(up, zAxis));
+    const yAxis = m4.normalize(m4.cross(zAxis, xAxis));
 
     return [
       xAxis[0], xAxis[1], xAxis[2], 0,

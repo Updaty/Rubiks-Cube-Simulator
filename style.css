@@ -55,6 +55,9 @@ textarea {
     position: absolute;
     text-align: center;
     line-height: var(--size);
+    &:hover {
+        background-color: #dddc;
+    }
 }
 
 

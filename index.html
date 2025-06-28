@@ -74,7 +74,7 @@
 
     <br><br>
 
-    <button onclick="cube.shuffle();drawCube()">Shuffle</button>
+    <button onclick="cube.scramble();drawCube()">Scramble</button>
     <button onclick="cube.initPieces();drawCube()">Reset</button>
 
     <br><br>
@@ -84,14 +84,14 @@
     <button onclick="executeRotations()">Execute</button>
 	
     <canvas id=cubeCanvas width=500 height=500></canvas>
-
+<div id=non style="position: absolute;font-weight: 900;">☃</div>
     <div id=minicube>
-        <div class=cube_side>F</div>
-        <div class=cube_side>B</div>
-        <div class=cube_side>R</div>
-        <div class=cube_side>L</div>
-        <div class=cube_side>U</div>
-        <div class=cube_side>D</div>
+        <div class=cube_side onclick="cubeDrawer.rotation = [180, 180];drawCube();cubeDrawer.rotateMinicube()">F</div>
+        <div class=cube_side onclick="cubeDrawer.rotation = [180, 0];drawCube();cubeDrawer.rotateMinicube()">B</div>
+        <div class=cube_side onclick="cubeDrawer.rotation = [180, -270];drawCube();cubeDrawer.rotateMinicube()">R</div>
+        <div class=cube_side onclick="cubeDrawer.rotation = [180, -90];drawCube();cubeDrawer.rotateMinicube()">L</div>
+        <div class=cube_side onclick="cubeDrawer.rotation = [270, 0];drawCube();cubeDrawer.rotateMinicube()">U</div>
+        <div class=cube_side onclick="cubeDrawer.rotation = [90, 0];drawCube();cubeDrawer.rotateMinicube()">D</div>
     </div>
 
     <script src="https://webgl2fundamentals.org/webgl/resources/webgl-utils.js"></script>
@@ -99,7 +99,7 @@
     <script src="./rubiks_cube.js"></script>
     <script>
 const cube = new RubiksCube();
-//cube.shuffle();
+//cube.scramble();
 const cubeDrawer = new RubiksCubeDrawer(cube, 'cubeCanvas');
 cubeDrawer.rotation = [200, 160]; // Initial rotation angles
 
@@ -181,6 +181,11 @@ document.querySelectorAll('.rotation').forEach(button => {
         cube.rotate(rotation);
         drawCube();
     });
+});
+
+cubeCanvas.addEventListener('click', e => {
+
+    console.log('Click at:', Array.from(cubeDrawer.transformToCubeSpace(e.layerX, e.layerY)));
 });
     </script>
 </body>

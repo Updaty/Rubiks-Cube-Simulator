@@ -2,6 +2,16 @@
 
 class CubePiece {
     static faces = ['U', 'D', 'L', 'R', 'F', 'B'];
+
+    initBuffers(gl) {
+        this.vao = gl.createVertexArray();
+        gl.bindVertexArray(this.vao);
+
+        this.positionBuffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.positionBuffer);
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.getVertices()), gl.STATIC_DRAW);
+    }
+
     constructor(position='000') {
         if (!/^[0-2]{3}$/.test(position)){
             throw new Error("Invalid position format. Use '000' to '222'.");
@@ -41,6 +51,7 @@ class CubePiece {
                 this.faces.B = defaultColor.B; // Back
         }
     }
+    
     rotate(rotation) {
         const oldFaces = {...this.faces}; // Create a copy of the current faces
         switch (rotation) {
@@ -169,6 +180,7 @@ class RubiksCube {
         "": "'"
     }
 
+
     rotate(face){
         const sign = face[1] ?? '';
         
@@ -181,7 +193,7 @@ class RubiksCube {
             }else if(face[0] === 'y') {
                 this.rotate('U' + sign);
                 this.rotate('D' + RubiksCube.toggleSign[sign]);
-                this.rotate('E' + sign);
+                this.rotate('E' + RubiksCube.toggleSign[sign]);
             }else if(face[0] === 'z') {
                 this.rotate('F' + sign);
                 this.rotate('B' + RubiksCube.toggleSign[sign]);
@@ -229,7 +241,7 @@ class RubiksCube {
         S: ((x,y) => `${x}${y}1`),
         
     }
-    shuffle() {
+    scramble() {
         const { faces } = CubePiece;
         const signs = ["","'","2"];
         for (let i = 0; i < 20; ++i) {
@@ -289,11 +301,55 @@ class RubiksCubeDrawer {
 		matrix = m4.scale(matrix, 2.5, 2.5, 2.5);
 		matrix = m4.translate(matrix, -45, -45, -45);
 
+
 		//Set the matrix uniform
 		this.gl.uniformMatrix4fv(this.matrixLoc, false, matrix);
 
 		// Draw the geometry                     9 pieces and 4 lines on each side
 		this.gl.drawArrays(this.gl.TRIANGLES, 0, (9 + 4) * 6 * 6);
+
+        // this is the front top left corner
+        const point = [0,0,0,1];
+
+        const clipspace = m4.transformVector(matrix, point);
+
+        this.matrix = matrix;
+
+        // divide X and Y by W just like the GPU does.
+        clipspace[0] /= clipspace[3];
+        clipspace[1] /= clipspace[3];
+        
+        // convert from clipspace to pixels
+        const pixelX = (clipspace[0] *  0.5 + 0.5) * this.gl.canvas.width;
+        const pixelY = (clipspace[1] * -0.5 + 0.5) * this.gl.canvas.height;
+
+        // position the div
+        //non.style.right = "calc(10% + 405px - " + Math.floor(pixelX) + "px)";
+        //non.style.top  = "calc(30px + " + Math.floor(pixelY) + "px + 5%)";
+    }
+
+    transformToCubeSpace(pointX, pointY) {
+        // Convert from pixel coordinates to cube space
+        const matrix = m4.inverse(this.matrix);
+        
+        const x = pointX / this.gl.canvas.width * 2 - 1;
+        const y = 1 - pointY / this.gl.canvas.height * 2;
+        
+        const point = [x, y, 0, 1];
+
+        const transformed = m4.transformVector(matrix, point);
+
+        transformed[0] /= transformed[3];
+        transformed[1] /= transformed[3];
+
+        //transformed[0] = (transformed[0] *  0.5 + 0.5) * this.gl.canvas.width;
+        //transformed[1] = (transformed[1] * -0.5 + 0.5) * this.gl.canvas.height;
+
+        return transformed.slice(0, 3); // Return only x, y, z
+    }
+
+    rotateMinicube() {
+        minicube.style.transform = `rotateX(${180-this.rotation[0]}deg) rotateY(${this.rotation[1]}deg)`;
     }
 
     rotate(angleX, angleY) {
@@ -302,6 +358,6 @@ class RubiksCubeDrawer {
         this.rotation[0] = this.rotation[0] % 360; // Keep within 0-360 degrees
         this.rotation[1] = this.rotation[1] % 360; // Keep within 0-360 degrees
         this.draw();
-        minicube.style.transform = `rotateX(${180-this.rotation[0]}deg) rotateY(${this.rotation[1]}deg)`;
+        this.rotateMinicube();
     }
 }
